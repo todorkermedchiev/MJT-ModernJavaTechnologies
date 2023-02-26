@@ -158,7 +158,7 @@ public class CommandExecutor {
             if (loggedUsers.containsKey(clientId)) {
                 return "There is already another logged user. Please log out first.";
             }
-            storage.login(username, password);
+            storage.checkPassword(username, password);
             loggedUsers.put(clientId, username);
             return String.format("User \"%s\" logged successfully!", username);
         } catch (UserNotFoundException | WrongPasswordException e) {

@@ -159,7 +159,7 @@ public class CommandExecutorTest {
     @Test
     void testLoginMissingUser() throws UserNotFoundException, WrongPasswordException {
         doThrow(new UserNotFoundException("User not found."))
-                .when(storageMock).login("username", "password");
+                .when(storageMock).checkPassword("username", "password");
 
         Command cmd = CommandCreator.newCommand("login --username=username --password=password");
         String response = executor.execute(0, cmd);
@@ -167,13 +167,13 @@ public class CommandExecutorTest {
         assertEquals("Cannot log in. User not found.", response,
                 "Unexpected response returned when user is not found.");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
     void testLoginWrongPassword() throws UserNotFoundException, WrongPasswordException {
         doThrow(new WrongPasswordException("Wrong password."))
-                .when(storageMock).login("username", "password");
+                .when(storageMock).checkPassword("username", "password");
 
         Command cmd = CommandCreator.newCommand("login --username=username --password=password");
         String response = executor.execute(0, cmd);
@@ -181,7 +181,7 @@ public class CommandExecutorTest {
         assertEquals("Cannot log in. Wrong password.", response,
                 "Unexpected response returned when the password is wrong.");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -196,7 +196,7 @@ public class CommandExecutorTest {
 
     @Test
     void testLoginExistingUser() throws UserNotFoundException, WrongPasswordException {
-        doNothing().when(storageMock).login("username", "password");
+        doNothing().when(storageMock).checkPassword("username", "password");
 
         Command cmd = CommandCreator.newCommand("login --username=username --password=password");
         String response = executor.execute(0, cmd);
@@ -204,7 +204,7 @@ public class CommandExecutorTest {
         assertEquals("User \"username\" logged successfully!", response,
                 "Unexpected response returned when user does not exists by now.");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -218,7 +218,7 @@ public class CommandExecutorTest {
 
     @Test
     void testLogoutLoggedUser() throws UserNotFoundException, WrongPasswordException {
-        doNothing().when(storageMock).login("username", "password");
+        doNothing().when(storageMock).checkPassword("username", "password");
 
         Command loginCmd = CommandCreator.newCommand("login --username=username --password=password");
         Command logoutCmd = CommandCreator.newCommand("logout");
@@ -229,7 +229,7 @@ public class CommandExecutorTest {
         assertEquals("User \"username\" successfully logged out.", response,
                 "Unexpected response returned when try to logout logged user. Expected success message");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -294,7 +294,7 @@ public class CommandExecutorTest {
 
         doThrow(new TaskNameAlreadyExistsException("Task already exists."))
                 .when(storageMock).addTask("username", task);
-        doNothing().when(storageMock).login("username", "password");
+        doNothing().when(storageMock).checkPassword("username", "password");
 
         Command loginCommand = CommandCreator.newCommand("login --username=username --password=password");
         Command addTaskCommand = CommandCreator.newCommand("add-task --name=task");
@@ -306,7 +306,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when addTask() is called and task with this name and date already exists");
 
         verify(storageMock).addTask("username", task);
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -318,7 +318,7 @@ public class CommandExecutorTest {
 
         doThrow(new TaskNameAlreadyExistsException("Task already exists."))
                 .when(storageMock).addTask("username", task);
-        doNothing().when(storageMock).login("username", "password");
+        doNothing().when(storageMock).checkPassword("username", "password");
 
         Command loginCommand = CommandCreator.newCommand("login --username=username --password=password");
         Command addTaskCommand = CommandCreator.newCommand("add-task --name=task --date=12.02.2023");
@@ -330,7 +330,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when addTask() is called and task with this name and date already exists");
 
         verify(storageMock).addTask("username", task);
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -340,7 +340,7 @@ public class CommandExecutorTest {
         Task task = Task.builder("task").setDate(LocalDate.parse("2023-02-12")).build();
 
         doNothing().when(storageMock).addTask("username", task);
-        doNothing().when(storageMock).login("username", "password");
+        doNothing().when(storageMock).checkPassword("username", "password");
 
         Command loginCommand = CommandCreator.newCommand("login --username=username --password=password");
         Command addTaskCommand = CommandCreator.newCommand("add-task --name=task --date=12.02.2023");
@@ -352,7 +352,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when addTask() is called for valid task");
 
         verify(storageMock).addTask("username", task);
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -417,7 +417,7 @@ public class CommandExecutorTest {
 
         doThrow(new TaskNotFoundException("Task not found."))
                 .when(storageMock).updateTask("username", task);
-        doNothing().when(storageMock).login("username", "password");
+        doNothing().when(storageMock).checkPassword("username", "password");
 
         Command loginCommand = CommandCreator.newCommand("login --username=username --password=password");
         Command updateTaskCommand = CommandCreator.newCommand("update-task --name=task");
@@ -429,7 +429,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when updateTask() is called and task with this name and date does not exist");
 
         verify(storageMock).updateTask("username", task);
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -451,7 +451,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when updateTask() is called and task with this name and date does not exist");
 
         verify(storageMock).updateTask("username", task);
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -470,7 +470,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when updateTask() is called for valid task");
 
         verify(storageMock).updateTask("username", task);
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -535,7 +535,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when deleteTask() is called and task with this name does not exist");
 
         verify(storageMock).deleteTask("username", "task");
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -555,7 +555,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when deleteTask() is called and task with this name and date does not exist");
 
         verify(storageMock).deleteTask("username", "task", LocalDate.parse("2023-02-12"));
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -572,7 +572,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when deleteTask() is called for valid task");
 
         verify(storageMock).deleteTask("username", "task", LocalDate.parse("2023-02-12"));
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -637,7 +637,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when getTask() is called and task with this name does not exist");
 
         verify(storageMock).getTask("username", "task");
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -657,7 +657,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when getTask() is called and task with this name and date does not exist");
 
         verify(storageMock).getTask("username", "task", LocalDate.parse("2023-02-12"));
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -678,7 +678,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when getTask() is called for valid task");
 
         verify(storageMock).getTask("username", "task", LocalDate.parse("2023-02-12"));
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -725,7 +725,7 @@ public class CommandExecutorTest {
         assertEquals("Tasks cannot be listed. No tasks found", response,
                 "Unexpected response returned when listTasks() is called and there are no tasks for this date");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listTasks("username", LocalDate.parse("2023-02-12"));
     }
 
@@ -745,7 +745,7 @@ public class CommandExecutorTest {
         assertEquals("Tasks cannot be listed. Collaboration not found", response,
                 "Unexpected response returned when listTasks() is called and collaboration does not exist");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listTasks("username", "collaboration");
     }
 
@@ -763,7 +763,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when listTasks() is called and there are no tasks for the " +
                         "logged user");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listTasks("username");
     }
 
@@ -781,7 +781,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when listCompletedTasks() is called and there are no tasks for " +
                         "the logged user");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listCompletedTasks("username");
     }
 
@@ -796,7 +796,7 @@ public class CommandExecutorTest {
         assertEquals(INVALID_COMMAND_FORMAT_MESSAGE + "There are more than one set properties.", response,
                 "Unexpected response returned when listTasks() is called with more than one property");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -820,7 +820,7 @@ public class CommandExecutorTest {
 
         assertEquals(expected, response, "Unexpected response returned for existing tasks");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listTasks("username");
     }
 
@@ -846,7 +846,7 @@ public class CommandExecutorTest {
         assertEquals(expected, response, "Unexpected response returned for existing completed tasks");
 
         verify(storageMock).listCompletedTasks("username");
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -871,7 +871,7 @@ public class CommandExecutorTest {
         assertEquals(expected, response, "Unexpected response returned for existing tasks with specified date");
 
         verify(storageMock).listTasks("username", LocalDate.parse("2023-02-12"));
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -896,7 +896,7 @@ public class CommandExecutorTest {
         assertEquals(expected, response, "Unexpected response returned for existing tasks from collaboration");
 
         verify(storageMock).listTasks("username", "collaboration");
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -921,7 +921,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when listDashboard() is called and no tasks are found.");
 
         verify(storageMock).listDashboard("username");
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -946,7 +946,7 @@ public class CommandExecutorTest {
         assertEquals(expected, response, "Unexpected response returned for existing tasks");
 
         verify(storageMock).listDashboard("username");
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
     }
 
     @Test
@@ -1008,7 +1008,7 @@ public class CommandExecutorTest {
         assertEquals("Task cannot be finished. Task not found.", response,
                 "Unexpected response returned when finishTask() is called for non-existent task");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).finishTask("username", "task");
     }
 
@@ -1024,7 +1024,7 @@ public class CommandExecutorTest {
         assertEquals("Task \"task\" finished successfully!", response,
                 "Unexpected response returned when finishTask() is successfully finished");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).finishTask("username", "task");
     }
 
@@ -1090,7 +1090,7 @@ public class CommandExecutorTest {
         assertEquals("Collaboration cannot be created. Collaboration already exists.", response,
                 "Unexpected response returned when addCollaboration() is called and collaboration exists");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).addCollaboration("username", "collaboration");
     }
 
@@ -1107,7 +1107,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when addCollaboration() is called and the collaboration is " +
                         "successfully created.");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).addCollaboration("username", "collaboration");
     }
 
@@ -1173,7 +1173,7 @@ public class CommandExecutorTest {
         assertEquals("Collaboration cannot be deleted. Collaboration not found.", response,
                 "Unexpected response returned when deleteCollaboration() is called and collaboration not found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).deleteCollaboration("username", "collaboration");
     }
 
@@ -1190,7 +1190,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when deleteCollaboration() is called and the collaboration is " +
                         "successfully deleted.");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).deleteCollaboration("username", "collaboration");
     }
 
@@ -1215,7 +1215,7 @@ public class CommandExecutorTest {
         assertEquals("No collaborations found!", response,
                 "Unexpected response returned when listCollaborations() is called and no collaborations found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).getCollaborations("username");
     }
 
@@ -1237,7 +1237,7 @@ public class CommandExecutorTest {
 
         assertEquals(expected, response, "Unexpected response returned for existing collaborations");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).getCollaborations("username");
     }
 
@@ -1316,7 +1316,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when addUserToCollaboration() is called and collaboration not" +
                         " found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).addUserToCollaboration("username", "collaboration",
                 "newUser");
     }
@@ -1338,7 +1338,7 @@ public class CommandExecutorTest {
         assertEquals("Cannot add user to collaboration. User not found.", response,
                 "Unexpected response returned when addUserToCollaboration() is called and user not found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).addUserToCollaboration("username", "collaboration",
                 "newUser");
     }
@@ -1361,7 +1361,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when addUserToCollaboration() is called and user is already " +
                         "added");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).addUserToCollaboration("username", "collaboration",
                 "newUser");
     }
@@ -1380,7 +1380,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when addUserToCollaboration() is called and the user is " +
                         "successfully added.");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).addUserToCollaboration("username", "collaboration",
                 "newUser");
     }
@@ -1472,7 +1472,7 @@ public class CommandExecutorTest {
                 "Unexpected response returned when assignTask() is called and collaboration is not" +
                         " found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).assignTask("username", "collaboration", "user",
                 "task");
     }
@@ -1496,7 +1496,7 @@ public class CommandExecutorTest {
         assertEquals("Cannot assign task. User not found.", response,
                 "Unexpected response returned when assignTask() is called and user not found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).assignTask("username", "collaboration", "user",
                 "task");
     }
@@ -1520,7 +1520,7 @@ public class CommandExecutorTest {
         assertEquals("Cannot assign task. Task not found.", response,
                 "Unexpected response returned when assignTask() is called and task is not found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).assignTask("username", "collaboration", "user",
                 "task");
     }
@@ -1544,7 +1544,7 @@ public class CommandExecutorTest {
         assertEquals("Cannot assign task. Task already assigned.", response,
                 "Unexpected response returned when assignTask() is called and task is already assigned");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).assignTask("username", "collaboration", "user",
                 "task");
     }
@@ -1565,7 +1565,7 @@ public class CommandExecutorTest {
         assertEquals("Task \"task\" successfully assigned with user \"user\".", response,
                 "Unexpected response returned when assignTask() is called and the operation is successful");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).assignTask("username", "collaboration", "user",
                 "task");
     }
@@ -1588,7 +1588,7 @@ public class CommandExecutorTest {
         assertEquals("Task \"task\" successfully assigned with user \"user\".", response,
                 "Unexpected response returned when assignTask() is called and the operation is successful");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).assignTask("username", "collaboration", "user",
                 "task", LocalDate.parse("2023-02-12"));
     }
@@ -1655,7 +1655,7 @@ public class CommandExecutorTest {
         assertEquals("Cannot list users in this collaboration. Collaboration not found.", response,
                 "Unexpected response returned when listUsers() is called and collaboration not found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listUsersInCollaboration("username", "collaboration");
     }
 
@@ -1674,7 +1674,7 @@ public class CommandExecutorTest {
         assertEquals("No users found in this collaboration.", response,
                 "Unexpected response returned when listUsers() is called and there are no any users found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listUsersInCollaboration("username", "collaboration");
     }
 
@@ -1701,7 +1701,7 @@ public class CommandExecutorTest {
         assertEquals(expected, response, "Unexpected response returned when listUsers() is called and there " +
                 "are some users found");
 
-        verify(storageMock).login("username", "password");
+        verify(storageMock).checkPassword("username", "password");
         verify(storageMock).listUsersInCollaboration("username", "collaboration");
     }
 

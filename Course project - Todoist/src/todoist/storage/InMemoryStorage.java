@@ -58,7 +58,7 @@ public class InMemoryStorage implements Storage {
     }
 
     @Override
-    public void login(String username, String password) throws UserNotFoundException, WrongPasswordException {
+    public void checkPassword(String username, String password) throws UserNotFoundException, WrongPasswordException {
         validateString(username, "username");
         validateString(password, "password");
 

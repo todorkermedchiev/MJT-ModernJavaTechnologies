@@ -18,7 +18,7 @@ public interface Storage {
 
     void addUser(String username, String password) throws UserAlreadyExistsException;
 
-    void login(String username, String password) throws UserNotFoundException, WrongPasswordException;
+    void checkPassword(String username, String password) throws UserNotFoundException, WrongPasswordException;
 
     void addTask(String currentUser, Task task) throws TaskNameAlreadyExistsException, UserNotFoundException;
 

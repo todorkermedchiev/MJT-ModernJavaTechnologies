@@ -79,43 +79,43 @@ public class InMemoryStorageTest {
 
     @Test
     void testLoginNullUsername() {
-        assertThrows(IllegalArgumentException.class, () -> storage.login(null, "password"),
+        assertThrows(IllegalArgumentException.class, () -> storage.checkPassword(null, "password"),
                 "Expected IllegalArgumentException to be thrown when username is null");
     }
 
     @Test
     void testLoginBlankUsername() {
-        assertThrows(IllegalArgumentException.class, () -> storage.login("  ", "password"),
+        assertThrows(IllegalArgumentException.class, () -> storage.checkPassword("  ", "password"),
                 "Expected IllegalArgumentException to be thrown when username is blank");
     }
 
     @Test
     void testLoginEmptyUsername() {
-        assertThrows(IllegalArgumentException.class, () -> storage.login("", "password"),
+        assertThrows(IllegalArgumentException.class, () -> storage.checkPassword("", "password"),
                 "Expected IllegalArgumentException to be thrown when username is empty");
     }
 
     @Test
     void testLoginNullPassword() {
-        assertThrows(IllegalArgumentException.class, () -> storage.login("username", null),
+        assertThrows(IllegalArgumentException.class, () -> storage.checkPassword("username", null),
                 "Expected IllegalArgumentException to be thrown when password is null");
     }
 
     @Test
     void testLoginBlankPassword() {
-        assertThrows(IllegalArgumentException.class, () -> storage.login("username", "  "),
+        assertThrows(IllegalArgumentException.class, () -> storage.checkPassword("username", "  "),
                 "Expected IllegalArgumentException to be thrown when password is blank");
     }
 
     @Test
     void testLoginEmptyPassword() {
-        assertThrows(IllegalArgumentException.class, () -> storage.login("username", ""),
+        assertThrows(IllegalArgumentException.class, () -> storage.checkPassword("username", ""),
                 "Expected IllegalArgumentException to be thrown when password is empty");
     }
 
     @Test
     void testLoginWhenUserDoesNotExist() {
-        assertThrows(UserNotFoundException.class, () -> storage.login("username", "password"),
+        assertThrows(UserNotFoundException.class, () -> storage.checkPassword("username", "password"),
                 "Expected UserNotFoundException to be thrown when the user does not exist");
     }
 
@@ -123,7 +123,7 @@ public class InMemoryStorageTest {
     void testLoginWhenUserExistsWrongPassword() throws UserAlreadyExistsException {
         storage.addUser("username", "password");
 
-        assertThrows(WrongPasswordException.class, () -> storage.login("username", "other_password"),
+        assertThrows(WrongPasswordException.class, () -> storage.checkPassword("username", "other_password"),
                 "Expected WrongPasswordException to be thrown when the password does not match");
     }
 
@@ -131,7 +131,7 @@ public class InMemoryStorageTest {
     void testLoginWhenUserExistsCorrectPassword() throws UserAlreadyExistsException {
         storage.addUser("username", "password");
 
-        assertDoesNotThrow(() -> storage.login("username", "password"),
+        assertDoesNotThrow(() -> storage.checkPassword("username", "password"),
                 "Unexpected exception thrown when user is successfully logged");
     }
 
