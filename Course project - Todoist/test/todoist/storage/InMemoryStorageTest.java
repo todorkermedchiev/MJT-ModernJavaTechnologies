@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import todoist.collaboration.Collaboration;
 import todoist.exception.CollaborationAlreadyExistsException;
 import todoist.exception.CollaborationNotFoundException;
+import todoist.exception.InvalidTimeIntervalException;
 import todoist.exception.TaskAlreadyExistsException;
 import todoist.exception.TaskNameAlreadyExistsException;
 import todoist.exception.TaskNotFoundException;
@@ -161,7 +162,8 @@ public class InMemoryStorageTest {
 
     @Test
     void testAddTaskWithDateExistingTask()
-            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException {
+            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException,
+            InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.now()).build();
         storage.addUser("username", "password");
@@ -172,7 +174,7 @@ public class InMemoryStorageTest {
     }
 
     @Test
-    void testAddTaskSuccessfullyAdded() throws UserAlreadyExistsException {
+    void testAddTaskSuccessfullyAdded() throws UserAlreadyExistsException, InvalidTimeIntervalException {
         Task task = Task.builder("task").setDueDate(LocalDate.now()).build();
         storage.addUser("username", "password");
 
@@ -181,7 +183,7 @@ public class InMemoryStorageTest {
     }
 
     @Test
-    void testAddTaskWithDateSuccessfullyAdded() throws UserAlreadyExistsException {
+    void testAddTaskWithDateSuccessfullyAdded() throws UserAlreadyExistsException, InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.now()).build();
         storage.addUser("username", "password");
@@ -213,7 +215,7 @@ public class InMemoryStorageTest {
     }
 
     @Test
-    void testUpdateTaskWithDateTaskDoesNotExist() throws UserAlreadyExistsException {
+    void testUpdateTaskWithDateTaskDoesNotExist() throws UserAlreadyExistsException, InvalidTimeIntervalException {
         Task task = Task.builder("task").setDate(LocalDate.now()).build();
         storage.addUser("username", "password");
 
@@ -235,7 +237,8 @@ public class InMemoryStorageTest {
 
     @Test
     void testAddTaskWithDateSuccessfullyUpdated()
-            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException {
+            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException,
+            InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.now()).build();
         storage.addUser("username", "password");
@@ -337,7 +340,8 @@ public class InMemoryStorageTest {
 
     @Test
     void testDeleteTaskWithDateExistingTask()
-            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException {
+            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException,
+            InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.now()).build();
         storage.addUser("username", "password");
@@ -440,7 +444,7 @@ public class InMemoryStorageTest {
     @Test
     void testGetTaskWithDateExistingTask()
             throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException,
-            TaskNotFoundException {
+            TaskNotFoundException, InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.now()).build();
         storage.addUser("username", "password");
@@ -484,7 +488,8 @@ public class InMemoryStorageTest {
 
     @Test
     void testListTasksTasksWithDateExist()
-            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException {
+            throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException,
+            InvalidTimeIntervalException {
 
         Task task1 = Task.builder("task1").setDate(LocalDate.now()).build();
         Task task2 = Task.builder("task2").setDate(LocalDate.now()).build();
@@ -556,7 +561,7 @@ public class InMemoryStorageTest {
     @Test
     void testListTasksWithDateExistingTasks()
             throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException,
-            TaskNotFoundException {
+            TaskNotFoundException, InvalidTimeIntervalException {
 
         Task task1 = Task.builder("task1").setDate(LocalDate.now()).build();
         Task task2 = Task.builder("task2").setDate(LocalDate.now()).build();
@@ -685,7 +690,7 @@ public class InMemoryStorageTest {
     @Test
     void testListDashboardExistingTasks()
             throws UserAlreadyExistsException, UserNotFoundException, TaskNameAlreadyExistsException,
-            TaskNotFoundException {
+            TaskNotFoundException, InvalidTimeIntervalException {
 
         Task task1 = Task.builder("task1").setDate(LocalDate.now()).build();
         Task task2 = Task.builder("task2").setDate(LocalDate.now()).build();
@@ -828,7 +833,7 @@ public class InMemoryStorageTest {
     void testDeleteCollaborationExistingCollaboration()
             throws UserAlreadyExistsException, UserNotFoundException, CollaborationAlreadyExistsException,
             CollaborationNotFoundException, TaskNotFoundException, TaskAlreadyExistsException,
-            TaskNameAlreadyExistsException {
+            TaskNameAlreadyExistsException, InvalidTimeIntervalException {
 
         storage.addUser("username", "password");
         storage.addUser("newUser", "password");
@@ -1000,7 +1005,7 @@ public class InMemoryStorageTest {
     @Test
     void testAssignTaskWithDateExistingTask()
             throws UserAlreadyExistsException, UserNotFoundException, CollaborationAlreadyExistsException,
-            TaskNameAlreadyExistsException, CollaborationNotFoundException {
+            TaskNameAlreadyExistsException, CollaborationNotFoundException, InvalidTimeIntervalException {
 
         storage.addUser("username", "password");
         storage.addUser("newUser", "password");

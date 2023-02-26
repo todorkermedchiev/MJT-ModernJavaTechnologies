@@ -4,6 +4,7 @@ import todoist.collaboration.Collaboration;
 import todoist.exception.CollaborationAlreadyExistsException;
 import todoist.exception.CollaborationNotFoundException;
 import todoist.exception.InvalidCommandFormatException;
+import todoist.exception.InvalidTimeIntervalException;
 import todoist.exception.TaskAlreadyExistsException;
 import todoist.exception.TaskNameAlreadyExistsException;
 import todoist.exception.TaskNotFoundException;
@@ -187,6 +188,8 @@ public class CommandExecutor {
             task = parseTask(arguments);
         } catch (InvalidCommandFormatException e) {
             return INVALID_COMMAND_FORMAT_MESSAGE + e.getMessage();
+        } catch (InvalidTimeIntervalException e) {
+            return "Task cannot be added. " + e.getMessage();
         }
 
         try {
@@ -208,6 +211,8 @@ public class CommandExecutor {
             newTask = parseTask(arguments);
         } catch (InvalidCommandFormatException e) {
             return INVALID_COMMAND_FORMAT_MESSAGE + e.getMessage();
+        } catch (InvalidTimeIntervalException e) {
+            return "Task cannot be updated. " + e.getMessage();
         }
 
         try {
@@ -218,7 +223,7 @@ public class CommandExecutor {
         }
     }
 
-    private Task parseTask(String... arguments) throws InvalidCommandFormatException {
+    private Task parseTask(String... arguments) throws InvalidCommandFormatException, InvalidTimeIntervalException {
         String name = parseArgument(ParameterName.NAME, arguments);
         LocalDate date = parseDate(ParameterName.DATE, arguments);
         LocalDate dueDate = parseDate(ParameterName.DUE_DATE, arguments);

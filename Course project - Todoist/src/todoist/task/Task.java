@@ -1,5 +1,7 @@
 package todoist.task;
 
+import todoist.exception.InvalidTimeIntervalException;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -54,12 +56,20 @@ public class Task {
             this.name = name;
         }
 
-        public TaskBuilder setDate(LocalDate date) {
+        public TaskBuilder setDate(LocalDate date) throws InvalidTimeIntervalException {
+            if (dueDate != null && dueDate.isBefore(date)) {
+                throw new InvalidTimeIntervalException("The date cannot be after the due date.");
+            }
+
             this.date = date;
             return this;
         }
 
-        public TaskBuilder setDueDate(LocalDate dueDate) {
+        public TaskBuilder setDueDate(LocalDate dueDate) throws InvalidTimeIntervalException {
+            if (date != null && dueDate.isBefore(date)) {
+                throw new InvalidTimeIntervalException("The due date cannot be before the date.");
+            }
+
             this.dueDate = dueDate;
             return this;
         }
