@@ -14,6 +14,7 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server extends Thread {
     private static final int BUFFER_SIZE = 2048;
@@ -22,7 +23,7 @@ public class Server extends Thread {
     private final CommandExecutor executor;
 
     private final int port;
-    private boolean isServerWorking;
+    private final AtomicBoolean isServerWorking;
 
     private ByteBuffer buffer;
     private Selector selector;
@@ -33,6 +34,7 @@ public class Server extends Thread {
         this.executor = executor;
         this.port = port;
         this.clientId = new HashMap<>();
+        this.isServerWorking = new AtomicBoolean();
     }
 
     public void startServer() {
@@ -44,11 +46,11 @@ public class Server extends Thread {
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             buffer = ByteBuffer.allocate(BUFFER_SIZE);
-            isServerWorking = true;
+            isServerWorking.set(true);
 
             int clientIdCounter = 0;
 
-            while (isServerWorking) {
+            while (isServerWorking.get()) {
                 int readyChannels = selector.select();
                 if (readyChannels == 0) {
                     continue;
@@ -91,7 +93,8 @@ public class Server extends Thread {
     }
 
     public void stopServer() {
-        this.isServerWorking = false;
+        this.isServerWorking.set(false);
+
         if (selector.isOpen()) {
             selector.wakeup();
         }
