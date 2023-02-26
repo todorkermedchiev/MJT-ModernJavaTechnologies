@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import todoist.collaboration.Collaboration;
 import todoist.exception.CollaborationAlreadyExistsException;
 import todoist.exception.CollaborationNotFoundException;
+import todoist.exception.InvalidTimeIntervalException;
 import todoist.exception.TaskAlreadyExistsException;
 import todoist.exception.TaskNameAlreadyExistsException;
 import todoist.exception.TaskNotFoundException;
@@ -268,6 +269,15 @@ public class CommandExecutorTest {
     }
 
     @Test
+    void testAddTaskWithDateInvalidTimeInterval() {
+        Command cmd = CommandCreator.newCommand("add-task --name=task --date=12.02.2023 --due-date=10.02.2023");
+        String response = executor.execute(0, cmd);
+
+        assertEquals("Task cannot be added. The due date cannot be before the date.", response,
+                "Unexpected response returned when addTask() is called and due date is before the execution date");
+    }
+
+    @Test
     void testAddTaskWhenUserIsNotLogged() {
         Command cmd = CommandCreator.newCommand("add-task --name=task --date=12.02.2023");
         String response = executor.execute(0, cmd);
@@ -301,7 +311,8 @@ public class CommandExecutorTest {
 
     @Test
     void testAddTaskWithDateWhenUserIsLoggedAndTaskAlreadyExists()
-            throws TaskNameAlreadyExistsException, UserNotFoundException, WrongPasswordException {
+            throws TaskNameAlreadyExistsException, UserNotFoundException, WrongPasswordException,
+            InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.parse("2023-02-12")).build();
 
@@ -324,7 +335,7 @@ public class CommandExecutorTest {
 
     @Test
     void testAddTaskWithDateWhenTaskSuccessfullyAdded()
-            throws TaskNameAlreadyExistsException, UserNotFoundException, WrongPasswordException {
+            throws TaskNameAlreadyExistsException, UserNotFoundException, WrongPasswordException, InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.parse("2023-02-12")).build();
 
@@ -381,6 +392,15 @@ public class CommandExecutorTest {
     }
 
     @Test
+    void testUpdateTaskWithDateInvalidTimeInterval() {
+        Command cmd = CommandCreator.newCommand("update-task --name=task --date=12.02.2023 --due-date=10.02.2023");
+        String response = executor.execute(0, cmd);
+
+        assertEquals("Task cannot be updated. The due date cannot be before the date.", response,
+                "Unexpected response returned when updateTask() is called and due date is before the execution date");
+    }
+
+    @Test
     void testUpdateTaskWhenUserIsNotLogged() {
         Command cmd = CommandCreator.newCommand("update-task --name=task --date=12.02.2023");
         String response = executor.execute(0, cmd);
@@ -414,7 +434,7 @@ public class CommandExecutorTest {
 
     @Test
     void testUpdateTaskWithDateWhenUserIsLoggedAndTaskDoesNotExist()
-            throws UserNotFoundException, WrongPasswordException, TaskNotFoundException {
+            throws UserNotFoundException, WrongPasswordException, TaskNotFoundException, InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.parse("2023-02-12")).build();
 
@@ -436,7 +456,7 @@ public class CommandExecutorTest {
 
     @Test
     void testUpdateTaskWhenTaskSuccessfullyUpdated()
-            throws UserNotFoundException, WrongPasswordException, TaskNotFoundException {
+            throws UserNotFoundException, WrongPasswordException, TaskNotFoundException, InvalidTimeIntervalException {
 
         Task task = Task.builder("task").setDate(LocalDate.parse("2023-02-12")).build();
 
@@ -642,7 +662,7 @@ public class CommandExecutorTest {
 
     @Test
     void testGetTaskWhenTaskIsFound()
-            throws UserNotFoundException, WrongPasswordException, TaskNotFoundException {
+            throws UserNotFoundException, WrongPasswordException, TaskNotFoundException, InvalidTimeIntervalException {
 
         LocalDate date = LocalDate.parse("2023-02-12");
         Task task = Task.builder("task").setDate(date).build();
